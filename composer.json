@@ -1,0 +1,13 @@
+{
+    "name": "dbmover/pgsql-sequences",
+    "description": "Dbmover plugin to handle PostgreSQL sequences",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marijn Ophorst",
+            "email": "marijn@monomelodies.nl"
+        }
+    ],
+    "require": {}
+}
