@@ -18,16 +18,18 @@ class Plugin extends Core\Plugin
     public function __invoke(string $sql) : string
     {
         $seqs = [];
+        $exists = $this->loader->getPdo()->prepare("SELECT * FROM pg_class
+            WHERE relkind = 'S'
+            AND relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+            AND relname = ?");
         if (preg_match_all("@^CREATE SEQUENCE(.*?);$@m", $sql, $sequences, PREG_SET_ORDER)) {
             foreach ($sequences as $sequence) {
                 preg_match("@^(IF NOT EXISTS\s+)?(\w+?)$@", trim($sequence[1]), $match);
                 $seqs[] = $match[2];
-                if (strpos($sequence[1], 'IF NOT EXISTS') === false) {
-                    $_sql = "CREATE SEQUENCE IF NOT EXISTS {$sequence[1]}";
-                } else {
-                    $_sql = $sequence[0];
+                $exists->execute([$match[2]]);
+                if (!$exists->fetchColumn()) {
+                    $this->addOperation($_sql);
                 }
-                $this->addOperation($_sql);
                 $sql = str_replace($sequence[0], '', $sql);
             }
         }
