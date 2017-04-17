@@ -28,7 +28,7 @@ class Plugin extends Core\Plugin
                 $seqs[] = $match[2];
                 $exists->execute([$match[2]]);
                 if (!$exists->fetchColumn()) {
-                    $this->addOperation($_sql);
+                    $this->addOperation($sequence[0]);
                 }
                 $sql = str_replace($sequence[0], '', $sql);
             }
