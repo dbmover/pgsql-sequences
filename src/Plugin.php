@@ -11,10 +11,17 @@ namespace Dbmover\Pgsql\Sequences;
 use Dbmover\Core;
 use PDO;
 
+/**
+ * Plugin to (re)create Postgresql sequences.
+ */
 class Plugin extends Core\Plugin
 {
     public $description = 'Checking sequences...';
 
+    /**
+     * @param string $sql
+     * @return string
+     */
     public function __invoke(string $sql) : string
     {
         $seqs = [];
@@ -45,6 +52,8 @@ class Plugin extends Core\Plugin
         return $sql;
     }
 
+    /** @return void
+    */
     public function __destruct()
     {
         $this->description = 'Dropping deprecated sequences...';
